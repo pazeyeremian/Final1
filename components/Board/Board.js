@@ -1,5 +1,5 @@
 import React from 'react'
-import { View, Text, StyleSheet, TouchableWithoutFeedback } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 
 
 const Board = ({ no, boxInfo , turn, winner }) => {
@@ -8,31 +8,47 @@ const Board = ({ no, boxInfo , turn, winner }) => {
     const { boxes, setBoxes } = boxInfo;
     const player = isXTurn ? 'X' : 'O';
 
+    const pressHandler = () => {
+        console.log('PRESS');
+        if( boxes[no] === null && winner === null) {
+            setBoxes((prevBoxInfo) => {
+                prevBoxInfo[no] = player
+                return prevBoxInfo;
+            });
+            setIsXTurn((prevState) => !prevState)
+        }
+    };
+
+    const xText = () => (
+        <Text style={styles.xText}>X</Text>
+    );
+
+    const oText = () => (
+        <Text style={styles.oText}>O</Text>
+    );
+
+    const emptyText = () => (
+        <Text></Text>
+    );
+
+    const getBoxContent = () => {
+        if (boxes[no] === null) {
+            return emptyText();
+        }
+
+        return boxes[no] === 'X' ? xText() : oText();
+    };
+
     return (
-        <TouchableWithoutFeedback
-            onPress={() => {
-                if( boxes[no] === null && winner === null) {
-                    setBoxes((prevBoxInfo) => {
-                        prevBoxInfo[no] = player
-                        return prevBoxInfo;
-                    });
-                    setIsXChance((prevState) => !prevState)
-                }
-            }}
-        >
-            {boxes[no] !== null ? 
+        <TouchableOpacity onPress={() => pressHandler()}>
             <View style={styles.boxView}>
-                { boxes[no] === 'X' ? 
-                <Entypo name="cross" size={68} color="brown" />
-                :
-                <Entypo name="circle" size={68} color="purple" />
-            } 
+                {getBoxContent()}
             </View>
-            : <View style={styles.boxView}></View>
-            }
-        </TouchableWithoutFeedback>
+        </TouchableOpacity>
     )
 }
+
+export default Board;
 
 
 const styles = StyleSheet.create({
@@ -43,5 +59,14 @@ const styles = StyleSheet.create({
         borderColor: 'gray',
         justifyContent: 'center',
         alignItems: 'center',
-    }
+        backgroundColor: 'white',
+    },
+    xText: {
+        color: '#CF660E',
+        fontSize: 55,
+    },
+    oText: {
+        color: '#5E99F7',
+        fontSize: 55,
+    },
 })
