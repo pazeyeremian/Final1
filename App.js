@@ -6,7 +6,7 @@
  * @flow strict-local
  */
 
- import React , { useState } from 'react';
+ import React , { useEffect, useState } from 'react';
  import {
    SafeAreaView,
    StyleSheet,
@@ -25,6 +25,7 @@
    ReloadInstructions,
  } from 'react-native/Libraries/NewAppScreen';
 import Board from './components/Board/Board';
+// import PlayBox from './components/PlayBox';
 
 const App: () => React$Node = () => {
 
@@ -32,9 +33,9 @@ const App: () => React$Node = () => {
   const [isXTurn, setIsXTurn] = useState(true);
   const [winner, setWinner] = useState(null);
 
-  const playBox = (no) => {
+  const PlayBox = (no) => {
     return(
-      <Box 
+      <Board 
         no={no}
         boxInfo={{boxes, setBoxes}}
         turn={{ isXTurn, setIsXTurn }}
@@ -74,7 +75,7 @@ const App: () => React$Node = () => {
   const resetValues = () => {
     setWinner(null);
     setBoxes(Array(9).fill(null));
-    setIsXChance(true);
+    setIsXTurn(true);
   }
 
   return (
@@ -82,17 +83,19 @@ const App: () => React$Node = () => {
       <StatusBar style="auto"  backgroundColor='red'/>
       <View style={styles.featureContainer}>
         {winner !== null 
-        ? <Text style={[styles.primaryText, styles.winnerText]}>{winner} WINNER</Text>
+        ? <Text style={[styles.primaryText, styles.winnerText]}>{winner} IS THE WINNER</Text>
         : <Text style={styles.primaryText}>Turn: {isXTurn ? 'X' : 'O'}</Text>
         }
-        <Ionicons 
-          style={styles.resetIcon}
-          name="reload-circle" 
-          size={38} 
-          color="black" 
-          onPress={resetValues}
-        />
+
+        
       </View>
+
+      <View style={styles.resetButtonContainer}>
+        <TouchableOpacity onPress={resetValues}>
+          <Text>Reset Game</Text>
+        </TouchableOpacity>
+      </View>
+
       <View style={styles.playBoard}>
         <View style={styles.rows}>
           {PlayBox(0)}
@@ -114,18 +117,22 @@ const App: () => React$Node = () => {
   );
 }
 
+export default App;
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: '#FEFA8B',
     alignItems: 'center',
     justifyContent: 'center',
 
   },
   playBoard: {
-    borderWidth: 10,
-    borderRadius: 10,
-    borderColor: 'black'
+    borderWidth: 2,
+    borderRadius: 2,
+    borderColor: 'black',
+    marginLeft: 30,
+    marginRight: 30,
   },
   rows: {
     flexDirection: 'row',
@@ -140,6 +147,13 @@ const styles = StyleSheet.create({
     width: '100%',
     marginBottom: 20,
   },
+  resetButtonContainer: {
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+    width: '100%',
+    marginBottom: 10,
+    marginRight: 10
+  },
   primaryText: {
     fontSize: 36,
     color: 'black',
@@ -148,7 +162,7 @@ const styles = StyleSheet.create({
 
   },
   winnerText: {
-    color: 'darkorange',
+    color: 'purple',
     fontSize: 48,
   }
 });
